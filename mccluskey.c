@@ -111,7 +111,7 @@ bool BisaMembentukGrup(grupMintermT kelompokPertama, grupMintermT kelompokKedua,
     for(i = 0; i < hitungVariabel; i++)
     {
         // Kasus saat posisi '-' tidak sama
-        if((kelompokPertama.repr[i] == '-' && kelompokKedua.repr[i] != '-') || kelompokPertama.repr[i] != '-' && kelompokKedua.repr[i] == '-')
+        if((kelompokPertama.repr[i] == '-' && kelompokKedua.repr[i] != '-') || (kelompokPertama.repr[i] != '-' && kelompokKedua.repr[i] == '-'))
             return 0;
         // Kasus saat nilai binernya berbeda
         if(kelompokPertama.repr[i] != kelompokKedua.repr[i])
@@ -145,9 +145,9 @@ void InisiasiList(Node** root, unsigned int id)
     *root = nodeBaru;
 }
 
-void InsertList(Node** root, unsigned int id)
+void InsertList(Node *root, unsigned int id)
 {
-    Node* elemenBaru = (Node*) malloc(sizeof(Node));
+    Node *elemenBaru = (Node*) malloc(sizeof(Node));
     elemenBaru->id = id;
     elemenBaru->lanjut = elemenBaru->sebelum = NULL;
 
@@ -274,4 +274,3 @@ void AmbilImplicantEsensial(bool** primeChart, int hitungPrimeImplicants, int hi
             apakahEsensial[esensialSelanjutnya] = true;
     }
 }
-

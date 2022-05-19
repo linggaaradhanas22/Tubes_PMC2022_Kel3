@@ -449,11 +449,13 @@ int main()
             idNodeT* maxtermTemp = maxtermPendek;
             idNodeT* saatIni0 = maxtermPendek;
             unsigned int hitungMaxtermTemp;
-            for(CoverTerkecil(listMaxterm, &maxtermTemp, &hitungMaxtermPendek), saatIni0 = maxtermPendek; hitungMaxtermTemp == hitungMaxtermPendek; CoverTerkecil(listMaxterm, &maxtermTemp, &hitungMaxtermPendek))
-            {
+            for(CoverTerkecil(listMaxterm, &maxtermTemp, &hitungMaxtermTemp), saatIni0 = maxtermPendek;
+                hitungMaxtermTemp == hitungMaxtermPendek;
+                CoverTerkecil(listMaxterm, &maxtermTemp, &hitungMaxtermTemp)){
+
                 saatIni0->setelah = maxtermTemp;
                 saatIni0 = saatIni0->setelah;
-            } 
+            }
             saatIni0->setelah = NULL;
         }
 

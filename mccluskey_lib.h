@@ -70,7 +70,7 @@ void BuatRepresentasiBaru(char* RepresentasiGrupBaru, char* RepresentasiPertama,
 
 void InisiasiList(Node** root, unsigned int id);
 
-void InsertList(Node** root, unsigned int id);
+void InsertList(Node *root, unsigned int id);
 
 void GabungList(Node** rootBaru, Node* rootPertama, Node* rootKedua);
 

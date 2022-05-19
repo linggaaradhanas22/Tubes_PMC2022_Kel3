@@ -23,6 +23,30 @@ void BuatListMaxterm(bool** perluDicover, idNodeT** listMaxterm, int hitungMinte
     }
 }
 
+void CoverTerkecil(idNodeT** listMaxterm, idNodeT** maxtermTerpendek, unsigned int* hitungMaxtermTerpendek){
+    unsigned int i,min = 4294967295;
+    idNodeT *curr0 , *curr1;
+        for (curr0 = listMaxterm[0], i = 0; curr0 != NULL; curr0 = curr0->setelah, i = 0) {
+            for (curr1 = curr0; curr1 != NULL; curr1 = curr1->maxterm) {
+                i++;
+            }
+            if(i < min){
+                min = i; 
+                *maxtermTerpendek = curr0;
+            }
+        }
+    *hitungMaxtermTerpendek = min;
+    
+    if ((*maxtermTerpendek)->sebelum != NULL)
+        (*maxtermTerpendek)->sebelum->setelah = (*maxtermTerpendek)->setelah;
+    else if((*maxtermTerpendek)->sebelum == NULL && (*maxtermTerpendek)->setelah != NULL)
+        listMaxterm[0] = (*maxtermTerpendek)->setelah;
+    else
+        listMaxterm[0] = NULL;
+    if ((*maxtermTerpendek)->setelah != NULL)
+        (*maxtermTerpendek)->setelah->sebelum = (*maxtermTerpendek)->sebelum;
+}
+
 void InisialisasiNode(idNodeT** root, unsigned int id)
 {
     idNodeT* nodeBaru = (idNodeT*) malloc(sizeof(idNodeT));
