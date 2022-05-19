@@ -160,7 +160,7 @@ int main()
     /* Membuat array minterm tanpa dont care */
     grupMintermT* arrayMintermCare = (grupMintermT*) malloc(hitungMintermsCare * sizeof(grupMintermT));
     unsigned int hitungVariabelCare;
-    ParseInput(ekspresi_Care, arrayMinterm, hitungMintermsCare, &hitungVariabelCare);
+    ParseInput(ekspresi_Care, arrayMintermCare, hitungMintermsCare, &hitungVariabelCare);
     // Mengurutkan array berdasarkan ID minterm 
     qsort(arrayMintermCare, hitungMintermsCare, sizeof(grupMintermT), KomparasiID);
 
