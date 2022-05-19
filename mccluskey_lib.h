@@ -74,7 +74,7 @@ void InsertList(Node** root, unsigned int id);
 
 void GabungList(Node** rootBaru, Node* rootPertama, Node* rootKedua);
 
-bool ListSama(Node* rootPertama, Node* roodKedua);
+bool ListSama(Node* rootPertama, Node* rootKedua);
 
 void CetakList(Node* root);
 

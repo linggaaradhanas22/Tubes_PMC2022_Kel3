@@ -123,5 +123,155 @@ bool BisaMembentukGrup(grupMintermT kelompokPertama, grupMintermT kelompokKedua,
 
 void BuatRepresentasiBaru(char* RepresentasiGrupBaru, char* RepresentasiPertama, char* RepresentasiKedua, int hitungVariabel)
 {
+    for(unsigned int i = 0; i < hitungVariabel; i++)
+    {
+
     
+        if(RepresentasiPertama[i] == RepresentasiKedua[i])
+            RepresentasiGrupBaru[i] = RepresentasiPertama[i];
+        else 
+            RepresentasiGrupBaru[i] = '-';
+    }
+
+    RepresentasiGrupBaru[hitungVariabel] = '\0';
 }
+
+void InisiasiList(Node** root, unsigned int id)
+{
+    Node* nodeBaru = (Node*) malloc(sizeof(Node));
+    nodeBaru->id = id;
+    nodeBaru->lanjut = nodeBaru->sebelum = NULL;
+
+    *root = nodeBaru;
+}
+
+void InsertList(Node** root, unsigned int id)
+{
+    Node* elemenBaru = (Node*) malloc(sizeof(Node));
+    elemenBaru->id = id;
+    elemenBaru->lanjut = elemenBaru->sebelum = NULL;
+
+    // Menemukan lokasi insert elemen list yang sesuai
+    Node* saatIni;
+    for(saatIni = root; saatIni->lanjut != NULL; saatIni = saatIni -> lanjut)
+        if(saatIni->lanjut->id > elemenBaru->id)
+            break;
+
+    // Menyesuaikan indikator node sebelum dan sesudahnya
+    if(saatIni->lanjut != NULL)
+    {
+        saatIni->lanjut->sebelum = elemenBaru;
+        elemenBaru->lanjut = saatIni->lanjut;
+        elemenBaru->sebelum = saatIni;
+        saatIni->lanjut = elemenBaru;
+    }
+    else
+    {
+        elemenBaru->sebelum = saatIni;
+        saatIni->lanjut = elemenBaru;
+    }
+}
+
+void GabungList(Node** rootBaru, Node* rootPertama, Node* rootKedua)
+{
+    // Menginisialisasi list baru
+    InisiasiList(rootBaru, rootPertama->id);
+
+    // Menyalin list pertama
+    Node* saatIni;
+    for(saatIni = rootPertama->lanjut; saatIni != NULL; saatIni = saatIni->lanjut)
+        InsertList(*rootBaru, saatIni->id);
+
+    // Menyalin list kedua
+    for(saatIni = rootKedua; saatIni != NULL; saatIni = saatIni->lanjut)
+        InsertList(*rootBaru, saatIni->id);
+}
+
+bool ListSama(Node* rootPertama, Node* rootKedua)
+{
+    Node* nodePertama = rootPertama;
+    Node* nodeKedua = rootKedua;
+    while(nodePertama != NULL)
+    {
+        if(nodePertama->id != nodeKedua->id)
+            return 0;
+        
+        nodePertama = nodePertama->lanjut;
+        nodeKedua = nodeKedua->lanjut;
+    }
+    return 1;
+}
+
+void CetakList(Node* root)
+{
+    for(Node* saatIni = root; saatIni != NULL; saatIni = saatIni->lanjut)
+        printf("%2u", saatIni->id);
+}
+
+void AmbilPrimeImplicant(grupMintermT** tabel, bool** termDigunakan, grupMintermT* arrayPrimeImplicants, unsigned int* panjangKol, int hitungKolom)
+{
+    int i, j, index = 0;
+
+    for(i = 0; i <= hitungKolom; i++)
+        for(j = 0; j < panjangKol[i]; j++)
+            if(termDigunakan[i][j] == false)
+            {
+                arrayPrimeImplicants[index] = tabel[i][j];
+                index++;
+            }
+}
+
+void BuatPrimeChart(bool** primeChart, grupMintermT* minterms, int hitungMinterms, grupMintermT* arrayPrimeImplicants, int hitungPrimeImplicants)
+{
+    unsigned int i, j, idMinterm;
+    Node* saatIni;
+
+    // Melakukan traversal untuk semua prime implicants
+    for(i = 0, j = 0; i < hitungPrimeImplicants; i++, j = 0)
+    {
+        // Melakukan traversal untuk id yang terkandung di setiap prime implicants
+        for(saatIni = arrayPrimeImplicants[i].root; saatIni != NULL; saatIni = saatIni->lanjut)
+        {
+            // Menemukan posisi array untuk suatu prime implicants
+            idMinterm = minterms[j].root->id;
+            while(idMinterm < (saatIni->id) && j < hitungMinterms - 1)
+            {
+                j++;
+                idMinterm = minterms[j].root->id;
+            }
+
+            // Memberi tanda di tabel coverage bahwa j bisa ter-cover oleh i
+            if(saatIni->id == idMinterm)
+                primeChart[i][j] = true;
+        }
+    }
+}
+
+void AmbilImplicantEsensial(bool** primeChart, int hitungPrimeImplicants, int hitungMinterms, bool* apakahEsensial)
+{
+    int i, j, esensialSelanjutnya;
+
+    // Melakukan iterasi untuk semua minterm
+    for(j = 0; j < hitungMinterms; j++)
+    {
+        esensialSelanjutnya = -1;
+        // Melakukan iterasi untuk semua prime implicant di minterm
+        // dan memeriksa apakah hanya ada satu yang ter-cover
+        for(i = 0; i < hitungPrimeImplicants; i++)
+        {
+            if(primeChart[i][j] == true)
+            {
+                if(esensialSelanjutnya == -1)
+                    esensialSelanjutnya = i;
+                else
+                {
+                    esensialSelanjutnya = -1;
+                    break;
+                }
+            }
+        }
+        if(esensialSelanjutnya != -1)
+            apakahEsensial[esensialSelanjutnya] = true;
+    }
+}
+
